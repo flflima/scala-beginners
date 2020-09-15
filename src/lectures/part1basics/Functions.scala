@@ -60,12 +60,18 @@ object Functions extends App {
   def fibonacci(n: Int): Int =
     if (n == 1 || n == 2) 1
     else fibonacci(n - 1) + fibonacci(n - 2)
+
+  // f(4)
+  // f(3) + f(2)
+  // f(2) + f(1) + 1
+  // 1 + 1 + 1
+
   println(fibonacci(1))
   println(fibonacci(2))
   println(fibonacci(3))
   println(fibonacci(4))
   println(fibonacci(5))
-  println(fibonacci(10))
+  println(fibonacci(6))
   println(fibonacci(25))
 
 
