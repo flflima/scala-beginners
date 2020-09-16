@@ -16,7 +16,7 @@ object CBNvsCBV extends App {
   callByName(System.nanoTime())
 
   def infinite(): Int = 1 + infinite()
-  def printSomething(x: Int, y: => Int, z: Int) = print(x)
+  def printSomething(x: Int, y: => Int, z: Int): Unit = print(x)
 
 //  printSomething(infinite(), 34, 35) // stackoverflow
   printSomething(34, infinite(), 35) // sem stackoverflow, valor (=>) não é avaliado nunca logo não dá erro (delay evaluation)
