@@ -2,8 +2,8 @@ package lectures.part2oop
 
 object Generics extends App {
 
-  class MyList[A] { // [] generic type
-
+  class MyList[+A] { // [] generic type
+    def add[B >: A](element: B): MyList[B] = ???
   }
 
   trait MyMap[Key, Value]
@@ -34,4 +34,16 @@ object Generics extends App {
   // CONTRAVARIANCE
   class Trainer[-A]
   val trainer: Trainer[Cat] = new Trainer[Animal] // subtype = supertype
+
+  // bounded types
+  class Cage[A <: Animal] (animal: A) // only accepts types A that are subtypes of Animal
+                                      // also has  >: symbol, which means tha A must be a supertype of Animal
+  val cage = new Cage(new Dog)
+
+//  class Car
+//  val newCage = new Cage(new Car) // error
+
+  /**
+   * expand MyList from previous exercise to be generic
+   */
 }
