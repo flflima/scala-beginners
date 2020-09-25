@@ -55,7 +55,7 @@ object Exceptions extends App {
 
   class OverflowException extends Exception
   class UnderflowException extends Exception
-  class MathCalculationException extends Exception
+  class MathCalculationException extends Exception("Division by zero")
 
   class PocketCalculator {
     def add(x: BigInt, y: BigInt): BigInt =
@@ -76,5 +76,42 @@ object Exceptions extends App {
   val calculator = new PocketCalculator
 //  println(calculator.add(Int.MaxValue, 1))
 //  println(calculator.subtract(Int.MinValue, 1000))
-  println(calculator.divide(1000, 0))
+//  println(calculator.divide(1000, 0))
+
+  object NewCalculator {
+    def add(x: Int, y: Int) = {
+      val result = x + y
+
+      if (x > 0 && y > 0 && result < 0) throw new OverflowException
+      else if (x < 0 && y < 0 && result > 0) throw new UnderflowException
+      else result
+    }
+
+    def subtract(x: Int, y: Int) = {
+      val result = x - y
+
+      if (x > 0 && y < 0 && result < 0) throw new OverflowException
+      else if (x < 0 && y > 0 && result > 0) throw new UnderflowException
+      else result
+    }
+
+    def multiply(x: Int, y: Int) = {
+      val result = x * y
+
+      if (x > 0 && y > 0 && result < 0) throw new OverflowException
+      else if (x < 0 && y < 0 && result < 0) throw new OverflowException
+      else if (x < 0 && y > 0 && result > 0) throw new UnderflowException
+      else if (x > 0 && y < 0 && result > 0) throw new UnderflowException
+      else result
+    }
+
+    def divide(x: Int, y: Int) = {
+      if (y == 0) throw new MathCalculationException
+      else x / y
+    }
+  }
+
+  println(NewCalculator.add(Int.MaxValue, 1))
+//  println(NewCalculator.subtract(Int.MinValue, 1000))
+//  println(NewCalculator.divide(1000, 0))
 }
