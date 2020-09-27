@@ -40,11 +40,14 @@ object WhatsAFunction extends App {
 
   // higher-order functions: either receive functions as parameters or return functions
 
-  def myFunction: Function1[Int, Function1[Int, Int]] = new Function1[Int, Function1[Int, Int]] {
-    override def apply(a: Int): Function1[Int, Int] = new Function[Int, Int] {
-      override def apply(b: Int): Int = a + b
-    }
-  }
+//  def myFunction: Function1[Int, Function1[Int, Int]] = new Function1[Int, Function1[Int, Int]] {
+//    override def apply(a: Int): Function1[Int, Int] = new Function[Int, Int] {
+//      override def apply(b: Int): Int = a + b
+//    }
+//  }
+//
+//  def myFunction: Int => (Int => Int) = a => (b => a + b)
+  def myFunction = (a: Int) => (b: Int) => a + b
 
   val firstFunction = myFunction(1)
   println(firstFunction(2))

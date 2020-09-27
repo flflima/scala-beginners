@@ -1,5 +1,6 @@
 package lectures.part2oop
 
+import lectures.part2oop.Generics.MyList
 import lectures.part3fp.MyFunction
 
 abstract class MyList[+A] {
@@ -110,24 +111,17 @@ object ListTest extends App {
    * [1, 2, 3].map(n * 2)
    *
    */
-  println(list.map(new Function1[Int, Int] {
-    override def apply(value: Int): Int = value * 2
-  }))
+  println(list.map(value => value * 2))
 
   /**
    *
    */
-  println(list.filter(new Function1[Int, Boolean] {
-    override def apply(value: Int): Boolean = value % 2 == 0
-  }))
+  println(list.filter(value => value % 2 == 0))
 
   /**
    *
    */
-  println(list.flatMap(new Function1[Int, MyList[Int]] {
-    override def apply(value: Int): MyList[Int] =
-      Cons(value, Cons(value + 1, EmptyList))
-  }))
+  println(list.flatMap(value => Cons(value, Cons(value + 1, EmptyList))))
 
   println(cloneList == list)
 }
