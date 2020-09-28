@@ -1,7 +1,6 @@
 package lectures.part2oop
 
 import lectures.part2oop.Generics.MyList
-import lectures.part3fp.MyFunction
 
 abstract class MyList[+A] {
   /**
@@ -31,6 +30,11 @@ abstract class MyList[+A] {
   def flatMap[B](transformer: A => MyList[B]): MyList[B]
 
   def ++[B >: A](list: MyList[B]): MyList[B]
+
+  def foreach(f: A => Unit)
+  def sort(f: (A, A) => Int): MyList[A]
+  def zipWith[B, C](list: MyList[B], zip: (A, B) => C): MyList[C]
+  def fold[B](start: B)(operator: (B, A) => B): B
 }
 
 case object EmptyList extends MyList[Nothing] {
@@ -51,6 +55,14 @@ case object EmptyList extends MyList[Nothing] {
   def flatMap[B](transformer: Nothing => MyList[B]): MyList[B] = EmptyList
 
   def ++[B >: Nothing](list: MyList[B]): MyList[B] = list
+
+  def foreach(f: Nothing => Unit): Unit = ()
+  def sort(f: (Nothing, Nothing) => Int): MyList[Nothing] = EmptyList
+  def zipWith[B, C](list: MyList[B], zip: (Nothing, B) => C): MyList[C] = {
+    if (!list.isEmpty) throw new RuntimeException("Lists does not have the same length")
+    EmptyList
+  }
+  def fold[B](start: B)(operator: (B, Nothing) => B): B = start
 }
 
 case class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
@@ -76,6 +88,29 @@ case class Cons[+A](h: A, t: MyList[A]) extends MyList[A] {
     transformer(h) ++ t.flatMap(transformer)
 
   def ++[B >: A](list: MyList[B]): MyList[B] = Cons(h, t ++ list)
+
+  def foreach(f: A => Unit): Unit = {
+    f(h)
+    t.foreach(f)
+  }
+
+  def sort(f: (A, A) => Int): MyList[A] = {
+    def insert(x: A, sortedList: MyList[A]): MyList[A] = {
+      if (sortedList.isEmpty) Cons(x, EmptyList)
+      else if (f(x, sortedList.head) <= 0) Cons(x, sortedList)
+      else Cons(sortedList.head, insert(x, sortedList.tail))
+    }
+
+    val sortedTail = t.sort(f)
+    insert(h, sortedTail)
+  }
+
+  def zipWith[B, C](list: MyList[B], zip: (A, B) => C): MyList[C] = {
+    if (list.isEmpty) throw new RuntimeException("Lists does not have the same length")
+    else Cons(zip(h, list.head), t.zipWith(list.tail, zip))
+  }
+
+  def fold[B](start: B)(operator: (B, A) => B): B = t.fold(operator(start, h))(operator)
 }
 //
 //trait MyPredicate[-T] {
@@ -97,14 +132,14 @@ class StringToIntTransformer extends MyTransformer[String, Int] {
 }*/
 
 object ListTest extends App {
-  val list: MyList[Int] = Cons(1, Cons(2, Cons(3, EmptyList)))
+  val list: MyList[Int] = Cons(1, Cons(2, EmptyList))
   val cloneList: MyList[Int] = Cons(1, Cons(2, Cons(3, EmptyList)))
   println(list.tail.head)
   println(list.add(4).head)
   println(list.isEmpty)
   println(list.toString)
 
-  val listOfStrings: MyList[String] = Cons("Hello", EmptyList)
+  val listOfStrings: MyList[String] = Cons("Hello", Cons("scala", EmptyList))
   println(listOfStrings.toString)
 
   /**
@@ -124,4 +159,10 @@ object ListTest extends App {
   println(list.flatMap(value => Cons(value, Cons(value + 1, EmptyList))))
 
   println(cloneList == list)
+
+  println("-------------------------------------------")
+  list.foreach(x => println(x))
+  println(list.sort((x, y) => y - x))
+  println(list.zipWith[String, String](listOfStrings, _ + "-" + _))
+  println(list.fold(0)(_ + _))
 }
