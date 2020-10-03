@@ -165,4 +165,10 @@ object ListTest extends App {
   println(list.sort((x, y) => y - x))
   println(list.zipWith[String, String](listOfStrings, _ + "-" + _))
   println(list.fold(0)(_ + _))
+  println("-------------------------------------------")
+
+  val data = for {
+    i <- list
+  } yield "=> " + i
+  println(data)
 }
