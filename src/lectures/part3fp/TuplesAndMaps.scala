@@ -1,5 +1,9 @@
 package lectures.part3fp
 
+import javax.print.attribute.standard.Destination
+
+import scala.:+
+
 object TuplesAndMaps extends App {
 
   // tuples = finite ordered lists
@@ -45,5 +49,13 @@ object TuplesAndMaps extends App {
 
   val names = List("Bob", "James", "Mary", "Angela", "Pam", "Jim")
   println(names.groupBy(name => name.charAt(0)))
+
+  /**
+   * 1. What happens if in the toLoweCase map I had "Jim" -> 123 and "JIM" -> 123
+   */
+  val myFriends = Map(("Jim" -> 123), ("JIM" -> 432))
+  println(myFriends.map(pair => pair._1.toLowerCase -> pair._2))
+  // Map(jim -> 123) "Jim" -> "jim" and "JIM" -> "jim", same key the last one replaces the first one
+
 
 }
